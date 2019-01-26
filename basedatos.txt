@@ -1,0 +1,114 @@
+-- phpMyAdmin SQL Dump
+-- version 4.8.3
+-- https://www.phpmyadmin.net/
+--
+-- Host: localhost:8889
+-- Generation Time: Jan 26, 2019 at 09:13 PM
+-- Server version: 5.7.23
+-- PHP Version: 7.2.10
+
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET time_zone = "+00:00";
+
+--
+-- Database: `inventory`
+--
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `category`
+--
+
+CREATE TABLE `category` (
+  `id_category` int(11) NOT NULL,
+  `name_category` varchar(30) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `inventory`
+--
+
+CREATE TABLE `inventory` (
+  `id_inventory` int(11) NOT NULL,
+  `fk_id_product` int(11) NOT NULL,
+  `stock` double NOT NULL DEFAULT '0',
+  `is_inventory` tinyint(1) NOT NULL DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `product`
+--
+
+CREATE TABLE `product` (
+  `id_product` int(11) NOT NULL,
+  `name_product` varchar(50) NOT NULL,
+  `fk_id_category` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `category`
+--
+ALTER TABLE `category`
+  ADD PRIMARY KEY (`id_category`);
+
+--
+-- Indexes for table `inventory`
+--
+ALTER TABLE `inventory`
+  ADD PRIMARY KEY (`id_inventory`),
+  ADD KEY `fk_id_product` (`fk_id_product`);
+
+--
+-- Indexes for table `product`
+--
+ALTER TABLE `product`
+  ADD PRIMARY KEY (`id_product`),
+  ADD KEY `fk_id_category` (`fk_id_category`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `category`
+--
+ALTER TABLE `category`
+  MODIFY `id_category` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `inventory`
+--
+ALTER TABLE `inventory`
+  MODIFY `id_inventory` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `product`
+--
+ALTER TABLE `product`
+  MODIFY `id_product` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `inventory`
+--
+ALTER TABLE `inventory`
+  ADD CONSTRAINT `inventory_ibfk_1` FOREIGN KEY (`fk_id_product`) REFERENCES `product` (`id_product`);
+
+--
+-- Constraints for table `product`
+--
+ALTER TABLE `product`
+  ADD CONSTRAINT `product_ibfk_1` FOREIGN KEY (`fk_id_category`) REFERENCES `category` (`id_category`);
+

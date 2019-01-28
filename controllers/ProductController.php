@@ -82,6 +82,7 @@ class ProductController extends Controller {
                     $table->name_product = null;
                     $table->fk_id_category = null;
 
+                    //Se crea el registro en la tabla inventario
                     $tableInventory->fk_id_product = $table->id_product;
                     $tableInventory->stock = 0;
                     $tableInventory->is_inventory = 0;
@@ -114,11 +115,10 @@ class ProductController extends Controller {
         $msg = null;
         $categories = ArrayHelper::map(Category::find()->all(), 'id_category', 'name_category');
 
+        //Se intenta guardar la información del registro modificado
         if( $model->load(Yii::$app->request->post())) {
             if($model->validate()){
                 $table = Product::findOne($model->id_product);
-                var_dump($table);
-                    die();
                 if($table) {
                     //Se realiza la actualización
                     $table->name_product = $model->name;
@@ -140,6 +140,7 @@ class ProductController extends Controller {
 
         }
         
+        //Se trae la información del registro seleccionado
         if(Yii::$app->request->get("id_product")) {
 
             $id_product = Html::encode($_GET["id_product"]);
@@ -165,14 +166,18 @@ class ProductController extends Controller {
         return $this->render("update", ["model"=>$model, "msg" =>$msg, 'categories'=>$categories]);
     }
 
+    //Esta funció tiene como objetivoeliminar un registro de poducto siempre y cuando este no tenga un ingreso de inventario
     public function actionDelete() {
 
         if(Yii::$app->request->post()){
             $id_product = Html::encode($_POST["id_product"]);
             
             if(((int) $id_product)){
+
+                //Se busca el registro que contenga ell id de producto enviado
                 $inventory =Inventory::find()->where(['fk_id_product' => $id_product])->one();
 
+                //Se comprueba si se deb mostrar el enlace de eliminar
                 if($inventory->is_inventory == 0){
                     if(Product::deleteAll("id_product=:id_product",[":id_product" => $id_product])){
                         echo "Eliminación exitosa";
@@ -195,6 +200,7 @@ class ProductController extends Controller {
 
     }
 
+    //Esta función tiene como objetivo actualizar un ingreso de inventario
     public function actionInventory() {
         $model = new InventoryForm;
         $msg = null;
